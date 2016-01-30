@@ -1,19 +1,24 @@
-require 'rack'
+require_relative 'config/environment.rb'
 
 class Mother
   attr_reader :request
 
   def call(env)
     @request = Rack::Request.new(env)
+    return if params.empty?
     puts "Received Request: #{request.inspect}"
     puts "Params: #{params}"
+    reading = Reading.create(params)
+    reading.valid?
+    puts reading.inspect
+    puts reading.errors.inspect
     ['200', {'content-Type' => 'text/html'}, ['OKAY']]
   end
 
   private
 
   def params
-    @params ||= request.params
+    request.params
   end
 end
 

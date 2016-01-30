@@ -1,0 +1,3 @@
+hivemom:
+  adapter: sqlite3
+  database: 'db/hivemom.db'
