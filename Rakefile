@@ -1,4 +1,9 @@
 require_relative 'config/environment.rb'
+require 'rspec/core/rake_task'
+
+task :spec do
+  RSpec::Core::RakeTask.new(:spec)
+end
 
 namespace :db do
   def create_database config
