@@ -1,6 +1,6 @@
 class Mother
-  OKAY = ['200', {'content-Type' => 'text/html'}, ['OKAY']]
-  INVALID = ['400', {'content-Type' => 'text/html'}, ['INVALID']]
+  OKAY = ['200', { 'content-Type' => 'text/html' }, ['OKAY']].freeze
+  INVALID = ['400', { 'content-Type' => 'text/html' }, ['INVALID']].freeze
 
   attr_reader :request
 

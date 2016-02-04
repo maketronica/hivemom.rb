@@ -6,10 +6,12 @@ describe Mother do
 
   describe '#call' do
     context 'when params are empty' do
-      let(:env) {{
-        'QUERY_STRING' => '',
-        'rack.input' => double('String::IO')
-      }}
+      let(:env) do
+        {
+          'QUERY_STRING' => '',
+          'rack.input' => double('String::IO')
+        }
+      end
 
       it 'returns success' do
         expect(mother.call(env)).to eq(Mother::OKAY)
@@ -18,10 +20,12 @@ describe Mother do
 
     context 'when params have reading data' do
       let(:bot_id) { 42 }
-      let(:env) {{
-        'QUERY_STRING' => "reading[bot_id]=#{bot_id}",
-        'rack.input' => double('String::IO')
-      }}
+      let(:env) do
+        {
+          'QUERY_STRING' => "reading[bot_id]=#{bot_id}",
+          'rack.input' => double('String::IO')
+        }
+      end
 
       it 'returns success' do
         expect(mother.call(env)).to eq(Mother::OKAY)
@@ -35,15 +39,16 @@ describe Mother do
     end
 
     context 'when reading is invalid' do
-      let(:env) {{
-        'QUERY_STRING' => "reading[bot_temp]=5",
-        'rack.input' => double('String::IO')
-      }}
+      let(:env) do
+        {
+          'QUERY_STRING' => 'reading[bot_temp]=5',
+          'rack.input' => double('String::IO')
+        }
+      end
 
       it 'returns invalid' do
         expect(mother.call(env)).to eq(Mother::INVALID)
       end
-
     end
   end
 end
