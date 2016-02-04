@@ -24,6 +24,7 @@ GEM
     json (1.8.3)
     minitest (5.8.4)
     rack (1.6.4)
+    rake (10.5.0)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -57,7 +58,11 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   rack
+  rake
   rspec
   simplecov
   sqlite3
   thin
+
+BUNDLED WITH
+   1.10.6

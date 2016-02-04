@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'rack'
 require 'yaml'
 require 'logger'
