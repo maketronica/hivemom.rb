@@ -3,9 +3,12 @@ source 'https://rubygems.org'
 gem 'activerecord'
 gem 'rack'
 gem 'rake'
-gem 'rubocop', require: false
 gem 'sqlite3'
 gem 'thin'
+
+group :development do
+  gem 'rubocop', require: false
+end
 
 group :test do
   gem 'coveralls', require: false
