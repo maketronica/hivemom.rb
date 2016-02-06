@@ -22,7 +22,7 @@ describe Mother do
       let(:bot_id) { 42 }
       let(:env) do
         {
-          'QUERY_STRING' => "reading[bot_id]=#{bot_id}",
+          'QUERY_STRING' => "bot_id=#{bot_id}",
           'rack.input' => double('String::IO')
         }
       end
@@ -41,7 +41,7 @@ describe Mother do
     context 'when reading is invalid' do
       let(:env) do
         {
-          'QUERY_STRING' => 'reading[bot_temp]=5',
+          'QUERY_STRING' => 'bot_temp=5',
           'rack.input' => double('String::IO')
         }
       end
