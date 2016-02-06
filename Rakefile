@@ -46,7 +46,7 @@ namespace :db do
        'format: rake db:generate_migration[create_foos_table]'
   task :generate_migration, [:name] => :environment do |_, args|
     unless args[:name]
-      fail 'Must pass name. rake db:generate_migration[create_foos_table]'
+      raise 'Must pass name. rake db:generate_migration[create_foos_table]'
     end
     timestamp = DateTime.now.strftime('%Y%m%d%H%M%S%L')
     class_name = args[:name].split('_').collect(&:capitalize).join
