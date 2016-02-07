@@ -1,0 +1,1 @@
+curl -X GET -d 'query[metric]=temperatures' http://localhost:8080

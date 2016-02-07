@@ -1,3 +1,11 @@
-hivemom:
+production:
   adapter: sqlite3
-  database: 'db/hivemom.db'
+  database: 'db/production.db'
+
+development:
+  adapter: sqlite3
+  database: 'db/development.db'
+
+testing:
+  adapter: sqlite3
+  database: 'db/test.db'

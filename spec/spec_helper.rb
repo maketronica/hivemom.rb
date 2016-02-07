@@ -1,5 +1,9 @@
+ENV['HIVEMOM_ENV'] = 'testing'
 require 'simplecov'
 require 'coveralls'
+require_relative '../config/environment.rb'
+require 'active_record/fixtures'
+
 SimpleCov.start
 Coveralls.wear!
 
@@ -22,6 +26,26 @@ Coveralls.wear!
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  config.before(:suite) do
+    db_config =
+      YAML.load_file('config/database.yml')[ENV['HIVEMOM_ENV'] || 'development']
+    ActiveRecord::Tasks::DatabaseTasks.load_schema_for(
+      db_config,
+      :ruby,
+      File.expand_path('../../db/schema.rb', __FILE__)
+    )
+    ActiveRecord::Fixtures.create_fixtures(
+      File.expand_path('../fixtures', __FILE__),
+      'readings'
+    )
+  end
+
+  config.around(:each) do |test|
+    ActiveRecord::Base.transaction do
+      test.run
+      raise ActiveRecord::Rollback
+    end
+  end
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
