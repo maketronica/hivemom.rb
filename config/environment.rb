@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'csv'
 require 'rack'
 require 'yaml'
 require 'logger'
