@@ -2,12 +2,12 @@ class Mother
   OKAY = ['200', { 'content-Type' => 'text/html' }, ['OKAY']].freeze
   INVALID = ['400', { 'content-Type' => 'text/html' }, ['INVALID']].freeze
 
-  attr_reader :request
+  attr_reader :rack_request
 
   def call(env)
-    @request = Rack::Request.new(env)
+    @rack_request = Rack::Request.new(env)
     return OKAY if params.to_h.empty?
-    if @request.put?
+    if @rack_request.put?
       reading = Reading.create(params)
       return reading.valid? ? OKAY : INVALID
     else
@@ -34,6 +34,6 @@ class Mother
   end
 
   def params
-    request.params.with_indifferent_access
+    rack_request.params.with_indifferent_access
   end
 end

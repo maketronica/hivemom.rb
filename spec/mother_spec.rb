@@ -21,9 +21,9 @@ describe Mother do
       end
     end
 
-    context 'when POSTed params have reading data' do
+    context 'when PUT params have reading data' do
       let(:query_string) { 'bot_id=43' }
-      let(:request_method) { 'POST' }
+      let(:request_method) { 'PUT' }
 
       it 'returns success' do
         expect(mother.call(env)).to eq(Mother::OKAY)
