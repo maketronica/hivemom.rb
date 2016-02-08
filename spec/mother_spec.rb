@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../config/environment.rb'
 
 describe Mother do
   let(:mother) { Mother.new }
@@ -23,7 +22,7 @@ describe Mother do
     end
 
     context 'when POSTed params have reading data' do
-      let(:query_string) { "bot_id=42" }
+      let(:query_string) { 'bot_id=43' }
       let(:request_method) { 'POST' }
 
       it 'returns success' do
@@ -50,7 +49,7 @@ describe Mother do
     end
 
     context 'when GET params request temperatures' do
-      let(:query_string) { "query[metric]=temperatures" }
+      let(:query_string) { 'query[metric]=temperatures' }
       let(:request_method) { 'GET' }
       let(:csv_data) { '12345' }
 

@@ -1,0 +1,7 @@
+first:
+  bot_id: 1
+  hive_id: 2
+  bot_temp: 20
+  brood_temp: 22
+  bot_humidity: 50
+  brood_humidity: 55

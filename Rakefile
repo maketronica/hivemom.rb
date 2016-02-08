@@ -20,7 +20,8 @@ namespace :db do
   end
 
   task configuration: :environment do
-    @config = YAML.load_file('config/database.yml')[DATABASE_ENV]
+    @config = YAML
+      .load_file('config/database.yml')[ENV['HIVEMOM_ENV'] || 'development']
   end
 
   task configure_connection: :configuration do
@@ -33,6 +34,7 @@ namespace :db do
     if ActiveRecord::Migrator.migrate(MIGRATIONS_DIR, ENV['VERSION'])
       ENV['VERSION'].to_i
     end
+    Rake::Task['db:schema:dump'].invoke
   end
 
   desc 'Rolls the schema back to the previous version '\
@@ -40,6 +42,16 @@ namespace :db do
   task rollback: :configure_connection do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
     ActiveRecord::Migrator.rollback MIGRATIONS_DIR, step
+    Rake::Task['db:schema:dump'].invoke
+  end
+
+  desc 'Dump Schema'
+  namespace :schema do
+    task dump: :configure_connection do
+      File.open('db/schema.rb', "w:utf-8") do |file|
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+      end
+    end
   end
 
   desc 'Generate migration. '\
