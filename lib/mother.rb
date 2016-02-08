@@ -7,7 +7,7 @@ class Mother
   def call(env)
     @request = Rack::Request.new(env)
     return OKAY if params.to_h.empty?
-    if @request.post?
+    if @request.put?
       reading = Reading.create(params)
       return reading.valid? ? OKAY : INVALID
     else
