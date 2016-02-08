@@ -54,7 +54,7 @@ describe Mother do
       let(:csv_data) { '12345' }
 
       it 'returns csv data' do
-        expect(mother.call(env)[2]).to be_a(String)
+        expect(mother.call(env)[2]).to be_a(Rack::BodyProxy)
       end
     end
   end

@@ -11,11 +11,21 @@ class Mother
       reading = Reading.create(params)
       return reading.valid? ? OKAY : INVALID
     else
-      return ['200', { 'content-Type' => 'text/html' }, data]
+      send_rack_response
     end
   end
 
   private
+
+  def send_rack_response
+    # TODO: give dev jekyll env it's own source of data
+    # and then remove the Access-Control-Allow-Origin header
+    response = Rack::Response.new
+    response.body = [data]
+    response['Access-Control-Allow-Origin'] = '*'
+    response.status = 200
+    response.finish
+  end
 
   def data
     temp_data if params[:query][:metric] == 'temperatures'
