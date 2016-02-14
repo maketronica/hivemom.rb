@@ -95,6 +95,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   coveralls
+  daemons
   rack
   rake
   rspec

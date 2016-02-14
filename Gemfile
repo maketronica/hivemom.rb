@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activerecord'
+gem 'daemons'
 gem 'rack'
 gem 'rake'
 gem 'sqlite3'

@@ -1,1 +1,0 @@
-curl -d hive_id=1 -d bot_id=2 http://localhost:8080
