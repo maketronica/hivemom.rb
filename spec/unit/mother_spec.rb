@@ -2,7 +2,7 @@ describe Mother do
   let(:mother) { Mother.new }
 
   describe '#call' do
-    let(:config) { { 'data_file_path' => 'foo/bar' } }
+    let(:config) { { 'csv_folder' => '/foo/bar' } }
     let(:data_file_pointer) { double('File.open pointer') }
     let(:data_file_generator) do
       double('DataFileGenerator', call: true)
@@ -12,7 +12,7 @@ describe Mother do
       allow(YAML).to receive(:load_file).and_return(config)
       allow(File)
         .to receive(:open)
-        .with(config['data_file_path'])
+        .with("#{config['csv_folder']}/temperatures.csv")
         .and_return(data_file_pointer)
       allow(DataFileGenerator)
         .to receive(:new)

@@ -16,7 +16,7 @@ class Mother
   private
 
   def generate_data_files
-    file_pointer = File.open(config['data_file_path'])
+    file_pointer = File.open("#{config['csv_folder']}/temperatures.csv")
     DataFileGenerator.new(file_pointer).call
   end
 
