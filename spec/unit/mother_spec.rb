@@ -1,9 +1,25 @@
-require 'spec_helper'
-
 describe Mother do
   let(:mother) { Mother.new }
 
   describe '#call' do
+    let(:config) { { 'data_file_path' => 'foo/bar' } }
+    let(:data_file_pointer) { double('File.open pointer') }
+    let(:data_file_generator) do
+      double('DataFileGenerator', call: true)
+    end
+
+    before do
+      allow(YAML).to receive(:load_file).and_return(config)
+      allow(File)
+        .to receive(:open)
+        .with(config['data_file_path'])
+        .and_return(data_file_pointer)
+      allow(DataFileGenerator)
+        .to receive(:new)
+        .with(data_file_pointer)
+        .and_return(data_file_generator)
+    end
+
     let(:env) do
       {
         'REQUEST_METHOD' => request_method,
@@ -35,6 +51,11 @@ describe Mother do
           .by(1)
       end
 
+      it 'generates the csv file' do
+        expect(data_file_generator).to receive(:call)
+        mother.call(env)
+      end
+
       context 'when reading is invalid' do
         before do
           allow(Reading)
@@ -45,16 +66,6 @@ describe Mother do
         it 'returns invalid' do
           expect(mother.call(env)).to eq(Mother::INVALID)
         end
-      end
-    end
-
-    context 'when GET params request temperatures' do
-      let(:query_string) { 'query[metric]=temperatures' }
-      let(:request_method) { 'GET' }
-      let(:csv_data) { '12345' }
-
-      it 'returns csv data' do
-        expect(mother.call(env)[2]).to be_a(Rack::BodyProxy)
       end
     end
   end
