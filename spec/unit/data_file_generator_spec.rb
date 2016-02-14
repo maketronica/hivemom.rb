@@ -16,9 +16,16 @@ describe DataFileGenerator do
       expect(mock_file_pointer.string).to match(header_regex)
     end
 
-    it 'writes readings to the file pointer' do
-      probe_id = "HIVE_#{readings(:first).hive_id}_BOT_TEMP"
-      expect(mock_file_pointer.string).to match(/#{probe_id}/)
+    it 'writes recent readings to the file pointer' do
+      reading = readings(:recent_1)
+      matcher = "HIVE_#{reading.hive_id}_BOT_TEMP,#{reading.created_at}"
+      expect(mock_file_pointer.string).to match(/#{matcher}/)
+    end
+
+    it 'does not write older readings to the file pointer' do
+      reading = readings(:yesterday_1)
+      matcher = "HIVE_#{reading.hive_id}_BOT_TEMP,#{reading.created_at}"
+      expect(mock_file_pointer.string).not_to match(/#{matcher}/)
     end
   end
 end
