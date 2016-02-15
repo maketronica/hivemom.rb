@@ -3,3 +3,4 @@ db/*.db
 spec/examples.txt
 .bundle
 config/hivemom.yml
+*.pid

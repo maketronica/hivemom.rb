@@ -19,7 +19,7 @@ class Mother
     file_pointer = File.open("#{config['csv_folder']}/temperatures.csv", 'w')
     DataFileGenerator.new(file_pointer).call
   ensure
-    file_pointer.close
+    file_pointer.try(:close)
   end
 
   def config
