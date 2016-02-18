@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'csv'
 require 'rack'
+require 'remote_syslog_logger'
 require 'yaml'
 require 'logger'
 require 'active_record'

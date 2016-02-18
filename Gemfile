@@ -7,6 +7,8 @@ gem 'rake'
 gem 'sqlite3'
 gem 'thin'
 
+gem 'remote_syslog_logger'
+
 group :development do
   gem 'rubocop', require: false
 end
