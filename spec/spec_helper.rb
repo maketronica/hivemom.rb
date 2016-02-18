@@ -1,4 +1,4 @@
-ENV['HIVEMOM_ENV'] = 'testing'
+ENV['HIVEMOM_ENV'] = 'test'
 require 'simplecov'
 require 'coveralls'
 require_relative '../config/environment.rb'
