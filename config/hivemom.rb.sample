@@ -3,4 +3,8 @@
 module HiveMom
   # Where to write csv data files for HiveDash
   config.csv_folder = '/var/hivedash/data'
+
+  # Set config.logger if you want to use a different ruby logger
+  # than the defualt.
+  # config.logger =
 end

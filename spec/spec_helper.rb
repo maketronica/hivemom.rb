@@ -29,6 +29,7 @@ include FixtureHelpers
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.before(:suite) do
+    HiveMom.logger.level = Logger::DEBUG
     db_config =
       YAML.load_file('config/database.yml')[ENV['HIVEMOM_ENV'] || 'development']
     ActiveRecord::Tasks::DatabaseTasks.load_schema_for(
@@ -44,6 +45,7 @@ RSpec.configure do |config|
 
   config.around(:each) do |test|
     ActiveRecord::Base.transaction do
+      HiveMom.logger.info('Running Test') { test.full_description }
       test.run
       raise ActiveRecord::Rollback
     end

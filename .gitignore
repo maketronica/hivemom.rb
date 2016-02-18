@@ -4,3 +4,4 @@ spec/examples.txt
 .bundle
 config/hivemom.rb
 *.pid
+log/*.log

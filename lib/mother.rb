@@ -6,6 +6,7 @@ class Mother
 
   def call(env)
     @rack_request = Rack::Request.new(env)
+    HiveMom.logger.info(self.class) { "Received Rack Req: #{env}" }
     return OKAY if params.to_h.empty?
     reading = Reading.create(params)
     return INVALID unless reading.valid?

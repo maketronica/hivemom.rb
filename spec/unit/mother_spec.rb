@@ -2,18 +2,16 @@ describe Mother do
   let(:mother) { Mother.new }
 
   describe '#call' do
-    let(:test_path) { '/test/path/to/folder' }
-    let(:config) { OpenStruct.new(csv_folder: test_path) }
+    let(:config) { HiveMom.config }
     let(:data_file_pointer) { double('File.open pointer', close: true) }
     let(:data_file_generator) do
       double('DataFileGenerator', call: true)
     end
 
     before do
-      allow(HiveMom).to receive(:config).and_return(config)
       allow(File)
         .to receive(:open)
-        .with("#{config['csv_folder']}/temperatures.csv", 'w')
+        .with("#{config.csv_folder}/temperatures.csv", 'w')
         .and_return(data_file_pointer)
       allow(DataFileGenerator)
         .to receive(:new)
