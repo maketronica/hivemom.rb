@@ -2,5 +2,5 @@ coverage
 db/*.db
 spec/examples.txt
 .bundle
-config/hivemom.yml
+config/hivemom.rb
 *.pid

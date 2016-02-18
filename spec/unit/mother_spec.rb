@@ -2,14 +2,15 @@ describe Mother do
   let(:mother) { Mother.new }
 
   describe '#call' do
-    let(:config) { { 'csv_folder' => '/foo/bar' } }
+    let(:test_path) { '/test/path/to/folder' }
+    let(:config) { OpenStruct.new(csv_folder: test_path) }
     let(:data_file_pointer) { double('File.open pointer', close: true) }
     let(:data_file_generator) do
       double('DataFileGenerator', call: true)
     end
 
     before do
-      allow(YAML).to receive(:load_file).and_return(config)
+      allow(HiveMom).to receive(:config).and_return(config)
       allow(File)
         .to receive(:open)
         .with("#{config['csv_folder']}/temperatures.csv", 'w')

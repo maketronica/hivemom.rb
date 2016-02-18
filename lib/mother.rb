@@ -16,14 +16,17 @@ class Mother
   private
 
   def generate_data_files
-    file_pointer = File.open("#{config['csv_folder']}/temperatures.csv", 'w')
     DataFileGenerator.new(file_pointer).call
   ensure
     file_pointer.try(:close)
   end
 
-  def config
-    YAML.load_file(File.expand_path('../../config/hivemom.yml', __FILE__))
+  def file_pointer
+    @file_pointer ||= File.open("#{csv_folder}/temperatures.csv", 'w')
+  end
+
+  def csv_folder
+    HiveMom.config.csv_folder
   end
 
   def params
