@@ -6,7 +6,7 @@ class Mother
 
   def call(env)
     @rack_request = Rack::Request.new(env)
-    HiveMom.logger.info(self.class) { "Received Rack Req: #{env}" }
+    log_request
     return OKAY if params.to_h.empty?
     reading = Reading.create(params)
     return INVALID unless reading.valid?
@@ -15,6 +15,13 @@ class Mother
   end
 
   private
+
+  def log_request
+    req = rack_request
+    msg = "Received: #{req.request_method} from #{req.ip}, "\
+          "Length: #{req.content_length}"
+    HiveMom.logger.info(self.class) { msg }
+  end
 
   def generate_data_files
     DataFileGenerator.new(file_pointer).call
