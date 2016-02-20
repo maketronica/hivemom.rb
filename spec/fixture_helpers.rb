@@ -1,15 +1,16 @@
 module FixtureHelpers
   def method_missing(method_name, *args, &block)
     if fixture_names.include?(method_name)
-      method_name
-        .to_s
-        .singularize
-        .titleize
+      namespaced(method_name)
         .constantize
         .find(fixture_id(args[0]))
     else
       super
     end
+  end
+
+  def namespaced(name)
+    "HiveMom::#{name.to_s.singularize.titleize}"
   end
 
   def fixture_id(label)

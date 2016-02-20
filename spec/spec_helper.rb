@@ -29,6 +29,7 @@ include FixtureHelpers
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.before(:suite) do
+    HiveMom.config.csv_folder = 'test/path'
     HiveMom.logger.level = Logger::DEBUG
     db_config =
       YAML.load_file('config/database.yml')[ENV['HIVEMOM_ENV'] || 'development']
@@ -39,7 +40,8 @@ RSpec.configure do |config|
     )
     ActiveRecord::FixtureSet.create_fixtures(
       File.expand_path('../fixtures', __FILE__),
-      'readings'
+      'readings',
+      'readings' => HiveMom::Reading
     )
   end
 
