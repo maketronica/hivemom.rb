@@ -39,9 +39,9 @@ RSpec.configure do |config|
       File.expand_path('../../db/schema.rb', __FILE__)
     )
     ActiveRecord::FixtureSet.create_fixtures(
-      File.expand_path('../fixtures', __FILE__),
-      'readings',
-      'readings' => HiveMom::Reading
+      fixture_path,
+      *fixture_names,
+      fixture_name_class_map
     )
   end
 
@@ -126,4 +126,14 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
+end
+
+def fixture_path
+  File.expand_path('../fixtures', __FILE__)
+end
+
+def fixture_name_class_map
+  fixture_names.each_with_object({}) do |name, hash|
+    hash[name] = "HiveMom::#{name.to_s.singularize.camelize}".constantize
+  end
 end

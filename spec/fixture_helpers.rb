@@ -10,7 +10,7 @@ module FixtureHelpers
   end
 
   def namespaced(name)
-    "HiveMom::#{name.to_s.singularize.titleize}"
+    "HiveMom::#{name.to_s.singularize.camelize}"
   end
 
   def fixture_id(label)
