@@ -13,20 +13,19 @@ module HiveMom
       end
 
       it 'writes a header to the file pointer' do
-        header_regex = /^probeid,timestamp,temperature$/
+        header_regex = /^probeid,timestamp,bot_temp,brood_temp$/
         expect(mock_file_pointer.string).to match(header_regex)
       end
 
       it 'writes recent readings to the file pointer' do
         reading = readings(:recent_1)
-        matcher = "HIVE_#{reading.hive_id}_BOT_TEMP,#{reading.created_at}"
+        matcher = "HIVE_#{reading.hive_id},#{reading.created_at}"
         expect(mock_file_pointer.string).to match(/#{matcher}/)
       end
 
       it 'does not write older readings to the file pointer' do
-        puts Reading.all.map(&:id)
         reading = readings(:yesterday_1)
-        matcher = "HIVE_#{reading.hive_id}_BOT_TEMP,#{reading.created_at}"
+        matcher = "HIVE_#{reading.hive_id},#{reading.created_at}"
         expect(mock_file_pointer.string).not_to match(/#{matcher}/)
       end
     end

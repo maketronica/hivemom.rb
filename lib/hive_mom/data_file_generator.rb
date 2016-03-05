@@ -15,17 +15,16 @@ module HiveMom
 
     def data
       CSV.generate do |csv|
-        csv << %w(probeid timestamp temperature)
+        csv << %w(probeid timestamp bot_temp brood_temp)
         readings.find_each do |r|
-          csv << data_row(r, :bot_temp)
-          csv << data_row(r, :brood_temp)
+          csv << data_row(r)
         end
       end
     end
 
-    def data_row(reading, measurement)
-      probeid = "HIVE_#{reading.hive_id}_#{measurement.to_s.upcase}"
-      [probeid, reading.created_at, reading.send(measurement)]
+    def data_row(reading)
+      probeid = "HIVE_#{reading.hive_id}"
+      [probeid, reading.created_at, reading.bot_temp, reading.brood_temp]
     end
 
     def readings
