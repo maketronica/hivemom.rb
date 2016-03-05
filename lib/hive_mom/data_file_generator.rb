@@ -24,7 +24,12 @@ module HiveMom
 
     def data_row(reading)
       probeid = "HIVE_#{reading.hive_id}"
-      [probeid, reading.created_at, reading.bot_temp, reading.brood_temp]
+      [
+        probeid,
+        reading.created_at,
+        reading.bot_temp / 10,
+        reading.brood_temp / 10
+      ]
     end
 
     def readings
