@@ -31,7 +31,7 @@ module HiveMom
     end
 
     def file_pointer
-      @file_pointer ||= File.open("#{csv_folder}/temperatures.csv", 'w')
+      @file_pointer ||= File.open("#{csv_folder}/data.csv", 'w')
     end
 
     def csv_folder

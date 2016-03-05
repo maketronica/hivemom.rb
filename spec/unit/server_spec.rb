@@ -12,7 +12,7 @@ module HiveMom
       before do
         allow(File)
           .to receive(:open)
-          .with("#{config.csv_folder}/temperatures.csv", 'w')
+          .with("#{config.csv_folder}/data.csv", 'w')
           .and_return(data_file_pointer)
         allow(DataFileGenerator)
           .to receive(:new)
