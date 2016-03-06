@@ -25,13 +25,10 @@ module HiveMom
     end
 
     def generate_data_files
+      file_pointer = File.open("#{csv_folder}/data.csv", 'w')
       DataFileGenerator.new(file_pointer).call
     ensure
       file_pointer.try(:close)
-    end
-
-    def file_pointer
-      @file_pointer ||= File.open("#{csv_folder}/data.csv", 'w')
     end
 
     def csv_folder
