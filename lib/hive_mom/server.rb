@@ -3,7 +3,11 @@ module HiveMom
     OKAY = ['200', { 'content-Type' => 'text/html' }, ['OKAY']].freeze
     INVALID = ['400', { 'content-Type' => 'text/html' }, ['INVALID']].freeze
 
-    attr_reader :rack_request
+    attr_reader :rack_request, :s3_resourcer
+
+    def initialize(s3_resourcer = Aws::S3::Resource)
+      @s3_resourcer = s3_resourcer
+    end
 
     def call(env)
       @rack_request = Rack::Request.new(env)
@@ -27,8 +31,17 @@ module HiveMom
     def generate_data_files
       file_pointer = File.open("#{csv_folder}/data.csv", 'w')
       DataFileGenerator.new(file_pointer).call
+      upload_data_files
     ensure
       file_pointer.try(:close)
+    end
+
+    def upload_data_files
+      puts HiveMom.config.aws_region
+      s3 = @s3_resourcer.new(region: HiveMom.config.aws_region)
+      obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
+              .object('data.csv')
+      obj.upload_file("#{csv_folder}/data.csv")
     end
 
     def csv_folder

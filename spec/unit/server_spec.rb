@@ -1,6 +1,10 @@
 module HiveMom
   describe Server do
-    let(:mother) { Server.new }
+    let(:s3_object) { double('S3 object', upload_file: true) }
+    let(:s3_bucket) { double('S3 bucket', object: s3_object) }
+    let(:s3_client) { double('S3 client', bucket: s3_bucket) }
+    let(:s3_resourcer) { double('Aws::S3::Resource', new: s3_client) }
+    let(:mother) { Server.new(s3_resourcer) }
 
     describe '#call' do
       let(:config) { HiveMom.config }

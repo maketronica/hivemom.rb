@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activerecord'
+gem 'aws-sdk', '~> 2'
 gem 'daemons'
 gem 'rack'
 gem 'rake'
