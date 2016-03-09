@@ -27,8 +27,8 @@ module HiveMom
       [
         probeid,
         reading.created_at,
-        reading.bot_temp / 10,
-        reading.brood_temp / 10
+        reading.bot_temp.to_f / 10,
+        reading.brood_temp.to_f / 10
       ]
     end
 
