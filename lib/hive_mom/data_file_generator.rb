@@ -15,7 +15,7 @@ module HiveMom
 
     def data
       CSV.generate do |csv|
-        csv << %w(probeid timestamp bot_temp brood_temp)
+        csv << %w(probeid timestamp bot_temp bot_humidity)
         readings.find_each do |r|
           csv << data_row(r)
         end
@@ -28,7 +28,7 @@ module HiveMom
         probeid,
         reading.created_at,
         reading.bot_temp.to_f / 10,
-        reading.brood_temp.to_f / 10
+        reading.bot_humidity.to_f / 10
       ]
     end
 
