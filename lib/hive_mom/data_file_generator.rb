@@ -27,13 +27,17 @@ module HiveMom
       [
         probeid,
         reading.created_at,
-        reading.bot_temp.to_f / 10,
+        fahrenheit(reading.bot_temp.to_f / 10),
         reading.bot_humidity.to_f / 10
       ]
     end
 
     def readings
       Reading.where(['created_at > ?', 1.day.ago])
+    end
+
+    def fahrenheit(c)
+      (c * (9.0 / 5.0)) + 32
     end
   end
 end
