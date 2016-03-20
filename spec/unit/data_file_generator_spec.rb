@@ -13,7 +13,7 @@ module HiveMom
       end
 
       it 'writes a header to the file pointer' do
-        header_regex = /^probeid,timestamp,bot_temp,bot_humidity$/
+        header_regex = /^probeid,timestamp/
         expect(mock_file_pointer.string).to match(header_regex)
       end
 
