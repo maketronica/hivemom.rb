@@ -34,7 +34,7 @@ module HiveMom
         reading.bot_humidity.to_f / 10,
         fahrenheit(reading.brood_temp.to_f / 10),
         reading.brood_humidity.to_f / 10,
-        reading.hive_lbs
+        reading.hive_lbs.to_f / 100
       ]
     end
     # rubocop:enable Metrics/AbcSize, Style/MethodLength
