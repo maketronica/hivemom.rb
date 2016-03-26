@@ -16,14 +16,14 @@ module HiveMom
     def data
       CSV.generate do |csv|
         csv << %w(probeid timestamp bot_uptime bot_temp bot_humidity brood_temp
-                  brood_humidity)
+                  brood_humidity hive_lbs)
         readings.find_each do |r|
           csv << data_row(r)
         end
       end
     end
 
-    # rubocop:disable AbcSize
+    # rubocop:disable Metrics/AbcSize, Style/MethodLength
     def data_row(reading)
       probeid = "HIVE_#{reading.hive_id}"
       [
@@ -33,10 +33,11 @@ module HiveMom
         fahrenheit(reading.bot_temp.to_f / 10),
         reading.bot_humidity.to_f / 10,
         fahrenheit(reading.brood_temp.to_f / 10),
-        reading.brood_humidity.to_f / 10
+        reading.brood_humidity.to_f / 10,
+        reading.hive_lbs
       ]
     end
-    # rubocop:enable Metrics::AbcSize
+    # rubocop:enable Metrics/AbcSize, Style/MethodLength
 
     def readings
       Reading.where(['created_at > ?', 1.day.ago])
