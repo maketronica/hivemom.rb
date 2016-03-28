@@ -30,7 +30,8 @@ module HiveMom
 
     def generate_data_files
       file_pointer = File.open("#{csv_folder}/data.csv", 'w')
-      DataFileGenerator.new(file_pointer).call
+      readings = Reading.where(['created_at > ?', 1.day.ago])
+      DataFileGenerator.new(file_pointer, readings).call
       upload_data_files
     ensure
       file_pointer.try(:close)

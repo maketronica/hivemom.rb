@@ -1,9 +1,10 @@
 module HiveMom
   class DataFileGenerator
-    attr_reader :file
+    attr_reader :file, :readings
 
-    def initialize(file_pointer)
+    def initialize(file_pointer, readings)
       @file = file_pointer
+      @readings = readings
     end
 
     def call
@@ -17,7 +18,7 @@ module HiveMom
       CSV.generate do |csv|
         csv << %w(probeid timestamp bot_uptime bot_temp bot_humidity brood_temp
                   brood_humidity hive_lbs)
-        readings.find_each do |r|
+        readings.each do |r|
           csv << data_row(r)
         end
       end
@@ -38,10 +39,6 @@ module HiveMom
       ]
     end
     # rubocop:enable Metrics/AbcSize, Style/MethodLength
-
-    def readings
-      Reading.where(['created_at > ?', 1.day.ago])
-    end
 
     def fahrenheit(c)
       (c * (9.0 / 5.0)) + 32

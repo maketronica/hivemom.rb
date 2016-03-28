@@ -9,18 +9,22 @@ module HiveMom
     describe '#call' do
       let(:config) { HiveMom.config }
       let(:data_file_pointer) { double('File.open pointer', close: true) }
+      let(:mock_readings) { [double('reading')] }
       let(:data_file_generator) do
         double('DataFileGenerator', call: true)
       end
 
       before do
+        allow(Reading)
+          .to receive(:where)
+          .and_return(mock_readings)
         allow(File)
           .to receive(:open)
           .with("#{config.csv_folder}/data.csv", 'w')
           .and_return(data_file_pointer)
         allow(DataFileGenerator)
           .to receive(:new)
-          .with(data_file_pointer)
+          .with(data_file_pointer, mock_readings)
           .and_return(data_file_generator)
       end
 
