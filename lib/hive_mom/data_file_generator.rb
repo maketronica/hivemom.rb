@@ -24,7 +24,7 @@ module HiveMom
       end
     end
 
-    # rubocop:disable Metrics/AbcSize, Style/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def data_row(reading)
       probeid = "HIVE_#{reading.hive_id}"
       [
@@ -38,7 +38,7 @@ module HiveMom
         reading.hive_lbs.to_f / 100
       ]
     end
-    # rubocop:enable Metrics/AbcSize, Style/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def fahrenheit(c)
       (c * (9.0 / 5.0)) + 32

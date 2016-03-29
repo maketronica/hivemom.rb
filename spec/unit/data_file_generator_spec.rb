@@ -42,7 +42,6 @@ module HiveMom
         matcher = "HIVE_#{reading.hive_id},#{reading.created_at.utc}"
         expect(mock_file_pointer.string).to match(/#{matcher}/)
       end
-
     end
   end
 end
