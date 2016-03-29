@@ -29,7 +29,7 @@ module HiveMom
       probeid = "HIVE_#{reading.hive_id}"
       [
         probeid,
-        reading.created_at,
+        reading.created_at.utc,
         reading.bot_uptime,
         fahrenheit(reading.bot_temp.to_f / 10),
         reading.bot_humidity.to_f / 10,

@@ -39,9 +39,10 @@ module HiveMom
 
       it 'writes readings to the file pointer' do
         reading = mock_readings[0]
-        matcher = "HIVE_#{reading.hive_id},#{reading.created_at}"
+        matcher = "HIVE_#{reading.hive_id},#{reading.created_at.utc}"
         expect(mock_file_pointer.string).to match(/#{matcher}/)
       end
+
     end
   end
 end
