@@ -6,26 +6,37 @@ module HiveMom
     let(:s3_resourcer) { double('Aws::S3::Resource', new: s3_client) }
     let(:mother) { Server.new(s3_resourcer) }
 
-    describe '#call' do
+    describe '.call' do
       let(:config) { HiveMom.config }
       let(:data_file_pointer) { double('File.open pointer', close: true) }
-      let(:mock_readings) { [double('reading')] }
-      let(:data_file_generator) do
-        double('DataFileGenerator', call: true)
+      let(:reading_relation) { double('reading relation') }
+      let(:reading_group) do
+        double('reading group', average: { '01-01-16' => 42 })
       end
+      let(:data_file_generator) { double('DataFileGenerator', call: true) }
 
       before do
         allow(Reading)
           .to receive(:where)
-          .and_return(mock_readings)
+          .and_return(reading_relation)
         allow(File)
           .to receive(:open)
-          .with("#{config.csv_folder}/data.csv", 'w')
+          .with("#{config.csv_folder}/minutely_data.csv", 'w')
+          .and_return(data_file_pointer)
+        allow(File)
+          .to receive(:open)
+          .with("#{config.csv_folder}/hourly_data.csv", 'w')
+          .and_return(data_file_pointer)
+        allow(File)
+          .to receive(:open)
+          .with("#{config.csv_folder}/daily_data.csv", 'w')
           .and_return(data_file_pointer)
         allow(DataFileGenerator)
           .to receive(:new)
-          .with(data_file_pointer, mock_readings)
           .and_return(data_file_generator)
+        allow(reading_relation)
+          .to receive(:group)
+          .and_return(reading_group)
       end
 
       let(:env) do

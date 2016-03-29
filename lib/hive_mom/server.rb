@@ -15,7 +15,7 @@ module HiveMom
       return OKAY if params.to_h.empty?
       reading = Reading.create(params)
       return INVALID unless reading.valid?
-      generate_data_files
+      generate_and_upload_data_files
       OKAY
     end
 
@@ -28,21 +28,31 @@ module HiveMom
       HiveMom.logger.info(self.class) { msg }
     end
 
-    def generate_data_files
-      file_pointer = File.open("#{csv_folder}/data.csv", 'w')
-      readings = Reading.where(['created_at > ?', 1.day.ago])
+    def generate_and_upload_data_files
+      [:minutely, :hourly, :daily].each do |span|
+        generate_data_file(span)
+        upload_data_file(span)
+      end
+    end
+
+    def generate_data_file(span)
+      file_pointer = File.open("#{csv_folder}/#{filename_for(span)}", 'w')
+      readings = ReadingComposition.new(span).composite_readings
       DataFileGenerator.new(file_pointer, readings).call
-      upload_data_files
     ensure
       file_pointer.try(:close)
     end
 
-    def upload_data_files
+    def upload_data_file(span)
       puts HiveMom.config.aws_region
       s3 = @s3_resourcer.new(region: HiveMom.config.aws_region)
       obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
-              .object('data.csv')
-      obj.upload_file("#{csv_folder}/data.csv")
+              .object(filename_for(span))
+      obj.upload_file("#{csv_folder}/#{filename_for(span)}")
+    end
+
+    def filename_for(span)
+      "#{span}_data.csv"
     end
 
     def csv_folder
