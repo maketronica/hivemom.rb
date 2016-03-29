@@ -30,7 +30,13 @@ module HiveMom
 
     def generate_and_upload_data_files
       [:minutely, :hourly, :daily].each do |span|
+        HiveMom.logger.info(self.class) do
+          "Generating Data File: #{filename_for(span)}"
+        end
         generate_data_file(span)
+        HiveMom.logger.info(self.class) do
+          "Uploading Data File: #{filename_for(span)}"
+        end
         upload_data_file(span)
       end
     end
@@ -44,7 +50,6 @@ module HiveMom
     end
 
     def upload_data_file(span)
-      puts HiveMom.config.aws_region
       s3 = @s3_resourcer.new(region: HiveMom.config.aws_region)
       obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
               .object(filename_for(span))

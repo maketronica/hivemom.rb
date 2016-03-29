@@ -8,7 +8,6 @@ module HiveMom
     end
 
     def call
-      HiveMom.logger.info(self.class) { 'Generating Data File' }
       file.write(data)
     end
 
