@@ -12,7 +12,9 @@ module HiveMom
       if span == :minutely
         readings
       else
-        timestamps.map { |t| CompositeReading.new(t, self) }
+        hive_ids.map do |hive_id|
+          timestamps.map { |t| CompositeReading.new(t, hive_id, self) }
+        end.flatten
       end
     end
 
@@ -30,8 +32,12 @@ module HiveMom
 
     private
 
+    def hive_ids
+      Reading.pluck(:hive_id).uniq
+    end
+
     def timestamps
-      reading_groups.average(:id).keys
+      reading_groups.average(:id).keys.map(&:first)
     end
 
     def construct_and_call(method_name)
@@ -51,8 +57,8 @@ module HiveMom
 
     def group_clause
       case span
-      when :hourly then %(strftime('%Y-%m-%d %H', created_at))
-      when :daily then %(strftime('%Y-%m-%d', created_at))
+      when :hourly then [%(strftime('%Y-%m-%d %H', created_at)), :hive_id]
+      when :daily then [%(strftime('%Y-%m-%d', created_at)), :hive_id]
       end
     end
 
@@ -69,16 +75,17 @@ module HiveMom
     end
 
     class CompositeReading
-      attr_reader :timestamp, :composition
+      attr_reader :composition, :hive_id, :timestamp
 
-      def initialize(timestamp, composition)
+      def initialize(timestamp, hive_id, composition)
         @timestamp = timestamp
+        @hive_id = hive_id
         @composition = composition
       end
 
       def method_missing(method_name, *args, &block)
         if composition.respond_to?(method_name)
-          konstruct_and_call(method_name)
+          construct_and_call(method_name)
         else
           super
         end
@@ -86,9 +93,9 @@ module HiveMom
 
       private
 
-      def konstruct_and_call(method_name)
+      def construct_and_call(method_name)
         self.class.send(:define_method, method_name) do
-          composition.send(method_name)[timestamp]
+          composition.send(method_name)[[timestamp, hive_id]]
         end
         send(method_name)
       end

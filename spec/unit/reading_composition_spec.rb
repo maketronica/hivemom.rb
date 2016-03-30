@@ -8,8 +8,11 @@ module HiveMom
     end
 
     context '.composite_readings' do
+      let(:expected) { 234_564_573 }
+
       before do
-        Reading.create(created_at: 1.day.ago, bot_id: 42, hive_lbs: 21)
+        Reading.create(created_at: 12.hours.ago, bot_id: 42,
+                       hive_id: 1, hive_lbs: expected)
         @result = composition.composite_readings
       end
 
@@ -19,10 +22,10 @@ module HiveMom
 
       context 'composite reading' do
         let(:composition) { ReadingComposition.new(span) }
-        let(:composite_reading) { composition.composite_readings.first }
 
         it 'get composed methods from composition' do
-          expect(composite_reading.hive_lbs).to eq(21)
+          expect(composition.composite_readings.map(&:hive_lbs))
+            .to include(expected)
         end
       end
 
@@ -31,9 +34,9 @@ module HiveMom
 
         before do
           @reading1 = Reading.create(created_at: 23.hours.ago,
-                                     bot_id: 42, hive_lbs: 22)
+                                     bot_id: 42, hive_id: 1, hive_lbs: 22)
           @reading2 = Reading.create(created_at: 26.hours.ago,
-                                     bot_id: 43, hive_lbs: 23)
+                                     bot_id: 43, hive_id: 1, hive_lbs: 23)
           @result = composition.composite_readings
         end
 
@@ -47,8 +50,14 @@ module HiveMom
         let(:span) { :hourly }
 
         before do
-          Reading.create(created_at: 59.days.ago, bot_id: 42, hive_lbs: 22)
-          Reading.create(created_at: 61.days.ago, bot_id: 43, hive_lbs: 23)
+          Reading.create(created_at: 59.days.ago,
+                         bot_id: 42,
+                         hive_id: 1,
+                         hive_lbs: 22)
+          Reading.create(created_at: 61.days.ago,
+                         bot_id: 43,
+                         hive_id: 1,
+                         hive_lbs: 23)
           @result = composition.composite_readings
         end
 
@@ -69,9 +78,11 @@ module HiveMom
         before do
           Reading.create(created_at: 4.years.ago + 1.day,
                          bot_id: 42,
+                         hive_id: 1,
                          hive_lbs: 22)
           Reading.create(created_at: 4.years.ago - 1.day,
                          bot_id: 43,
+                         hive_id: 1,
                          hive_lbs: 23)
           @result = composition.composite_readings
         end
@@ -93,20 +104,22 @@ module HiveMom
         Reading.create(created_at: 3.hours.ago,
                        bot_id: 42,
                        brood_temp: 10,
+                       hive_id: 1,
                        hive_lbs: 41)
         Reading.create(created_at: 3.hours.ago,
                        bot_id: 42,
                        brood_temp: 20,
+                       hive_id: 1,
                        hive_lbs: 43)
         @timestamp = 3.hours.ago.utc.strftime('%Y-%m-%d %H')
       end
 
       it 'returns the average hive_lbs' do
-        expect(composition.hive_lbs[@timestamp]).to eq(42)
+        expect(composition.hive_lbs[[@timestamp, 1]]).to eq(42)
       end
 
       it 'returns the average brood_temp' do
-        expect(composition.brood_temp[@timestamp]).to eq(15)
+        expect(composition.brood_temp[[@timestamp, 1]]).to eq(15)
       end
     end
   end

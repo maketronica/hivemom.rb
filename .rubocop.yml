@@ -10,3 +10,7 @@ Documentation:
 Lint/RescueException:
   Exclude:
     - 'scripts/daemon.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*'

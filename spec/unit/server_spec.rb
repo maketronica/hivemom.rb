@@ -57,7 +57,7 @@ module HiveMom
       end
 
       context 'when PUT params have reading data' do
-        let(:query_string) { 'bot_id=43' }
+        let(:query_string) { 'bot_id=43&hive_id=1' }
         let(:request_method) { 'PUT' }
 
         it 'returns success' do
