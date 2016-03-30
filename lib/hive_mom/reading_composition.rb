@@ -42,7 +42,13 @@ module HiveMom
 
     def construct_and_call(method_name)
       self.class.send(:define_method, method_name) do
-        reading_groups.average(method_name)
+        @metrics_cache ||= {}
+        @metrics_cache[method_name] ||= 
+        if method_name == :created_at
+          reading_groups.minimum(method_name)
+        else
+          reading_groups.average(method_name)
+        end
       end
       send(method_name)
     end
@@ -57,8 +63,9 @@ module HiveMom
 
     def group_clause
       case span
-      when :hourly then [%(strftime('%Y-%m-%d %H', created_at)), :hive_id]
-      when :daily then [%(strftime('%Y-%m-%d', created_at)), :hive_id]
+      #when :hourly then [%(strftime('%Y-%m-%d %H', created_at)), :hive_id]
+      when :hourly then [:hourly_group_key, :hive_id]
+      when :daily then [:daily_group_key, :hive_id]
       end
     end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325182010762) do
+ActiveRecord::Schema.define(version: 20160329234658885) do
 
   create_table "readings", force: :cascade do |t|
     t.integer  "hive_id"
@@ -21,9 +21,14 @@ ActiveRecord::Schema.define(version: 20160325182010762) do
     t.integer  "bot_humidity"
     t.integer  "brood_temp"
     t.integer  "brood_humidity"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "hive_lbs"
+    t.string   "hourly_group_key"
+    t.string   "daily_group_key"
   end
+
+  add_index "readings", ["daily_group_key", "hive_id"], name: "index_readings_on_daily_group_key_and_hive_id"
+  add_index "readings", ["hourly_group_key", "hive_id"], name: "index_readings_on_hourly_group_key_and_hive_id"
 
 end

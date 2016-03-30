@@ -17,6 +17,12 @@ module HiveMom
       return INVALID unless reading.valid?
       generate_and_upload_data_files
       OKAY
+    rescue Exception => e
+      HiveMom.logger.fatal("Mom died with: #{e} : #{e.message}")
+      e.backtrace.each do |line|
+        HiveMom.logger.fatal(line)
+      end
+      raise e
     end
 
     private
@@ -29,7 +35,8 @@ module HiveMom
     end
 
     def generate_and_upload_data_files
-      [:minutely, :hourly, :daily].each do |span|
+      #[:minutely, :hourly, :daily].each do |span|
+      [:minutely, :hourly].each do |span|
         HiveMom.logger.info(self.class) do
           "Generating Data File: #{filename_for(span)}"
         end
