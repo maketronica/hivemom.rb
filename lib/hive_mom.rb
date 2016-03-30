@@ -18,6 +18,12 @@ module HiveMom
   end
 
   def self.default_log_file
-    File.open(File.expand_path("#{root}/log/#{config.env}.log", __FILE__), 'a')
+    @default_log_file ||= File.open(default_log_file_path, 'a').tap do |file|
+      file.sync = true
+    end
+  end
+
+  def self.default_log_file_path
+    File.expand_path("#{root}/log/#{config.env}.log", __FILE__)
   end
 end

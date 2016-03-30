@@ -50,7 +50,7 @@ module HiveMom
     end
 
     def upload_data_file(span)
-      s3 = @s3_resourcer.new(region: HiveMom.config.aws_region)
+      s3 = s3_resourcer.new(region: HiveMom.config.aws_region)
       obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
               .object(filename_for(span))
       obj.upload_file("#{csv_folder}/#{filename_for(span)}")
