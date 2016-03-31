@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325182010762) do
+ActiveRecord::Schema.define(version: 20160330175147340) do
 
   create_table "readings", force: :cascade do |t|
     t.integer  "hive_id"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20160325182010762) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "hive_lbs"
+    t.string   "composite"
+    t.datetime "sampled_at"
   end
 
 end

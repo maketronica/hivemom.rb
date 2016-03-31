@@ -11,17 +11,8 @@ module HiveMom
         hive_lbs: 100
       }
     end
-    let(:mock_readings) do
-      [
-        double('reading',
-               default_reading_attrs.merge(created_at: 1.day.ago,
-                                           hive_id: 42)),
-        double('reading',
-               default_reading_attrs.merge(created_at: 1.hour.ago,
-                                           hive_id: 6000))
-      ]
-    end
-    let(:generator) { DataFileGenerator.new(mock_file_pointer, mock_readings) }
+    let(:composite_name) { :instant }
+    let(:generator) { DataFileGenerator.new(mock_file_pointer, composite_name) }
 
     it 'instantiates' do
       expect(generator).to be_a(DataFileGenerator)
@@ -38,7 +29,7 @@ module HiveMom
       end
 
       it 'writes readings to the file pointer' do
-        reading = mock_readings[0]
+        reading = readings(:recent_1)
         matcher = "HIVE_#{reading.hive_id},#{reading.created_at.utc}"
         expect(mock_file_pointer.string).to match(/#{matcher}/)
       end

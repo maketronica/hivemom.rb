@@ -4,6 +4,7 @@ require 'coveralls'
 require_relative '../config/environment.rb'
 require 'active_record/fixtures'
 require 'fixture_helpers'
+require 'timecop'
 
 SimpleCov.start
 Coveralls.wear!

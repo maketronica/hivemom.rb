@@ -1,6 +1,7 @@
 <% 1.upto(5) do |i| %>
 recent_<%= i %>:
   created_at: <%= i.minutes.ago %>
+  sampled_at: <%= i.minutes.ago %>
   updated_at: <%= i.minutes.ago %>
   bot_id: 1
   hive_id: 2
@@ -8,11 +9,13 @@ recent_<%= i %>:
   brood_temp: 22
   bot_humidity: 50
   brood_humidity: 55
+  composite: 'instant'
 <% end %>
 
 <% 1.upto(5) do |i| %>
 yesterday_<%= i %>:
   created_at: <%= i.minutes.ago - 1.day %>
+  sampled_at: <%= i.minutes.ago - 1.day %>
   updated_at: <%= i.minutes.ago - 1.day %>
   bot_id: 1
   hive_id: 2
@@ -20,4 +23,5 @@ yesterday_<%= i %>:
   brood_temp: 22
   bot_humidity: 50
   brood_humidity: 55
+  composite: 'instant'
 <% end %>

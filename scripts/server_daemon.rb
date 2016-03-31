@@ -1,3 +1,4 @@
+# rubocop:disable Lint/RescueException
 ENV['HIVEMOM_ENV'] = 'production'
 require_relative '../config/environment.rb'
 begin
@@ -13,3 +14,4 @@ rescue Exception => e
 ensure
   HiveMom.logger.info('Shutting Down')
 end
+# rubocop:enable Lint/RescueException
