@@ -11,6 +11,7 @@ module HiveMom
       loop do
         %w(hour day).each { |name| update_composites(name) }
         generate_and_upload_data_files
+        HiveMom.logger.info(self.class) { 'Hybernating' }
         sleep 900
       end
     end
