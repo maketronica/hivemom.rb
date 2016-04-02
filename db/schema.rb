@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160330175147340) do
+ActiveRecord::Schema.define(version: 20160401212239558) do
 
   create_table "readings", force: :cascade do |t|
     t.integer  "hive_id"
@@ -27,5 +27,7 @@ ActiveRecord::Schema.define(version: 20160330175147340) do
     t.string   "composite"
     t.datetime "sampled_at"
   end
+
+  add_index "readings", ["sampled_at"], name: "index_readings_on_sampled_at"
 
 end
