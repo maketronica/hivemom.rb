@@ -51,6 +51,11 @@ module HiveMom
       obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
               .object(filename_for(composite))
       obj.upload_file("#{csv_folder}/#{filename_for(composite)}")
+    rescue Errno::ECONNRESET => e
+      HiveMom.logger.info(self.class) do
+        "Rescuing from connection reset on uplodad: #{filename_for(composite)}"\
+        "Will try again later."
+      end
     end
 
     def csv_folder
