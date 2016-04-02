@@ -1,10 +1,10 @@
 module HiveMom
   class DataFileGenerator
-    attr_reader :file, :readings
+    attr_reader :file, :composite_name
 
-    def initialize(file_pointer, readings)
+    def initialize(file_pointer, composite_name)
       @file = file_pointer
-      @readings = readings
+      @composite_name = composite_name
     end
 
     def call
@@ -23,13 +23,27 @@ module HiveMom
       end
     end
 
+    def readings
+      @readings ||=
+        Reading.composite(composite_name)
+               .where(['sampled_at > ?', max_composite_readings_age])
+    end
+
+    def max_composite_readings_age
+      case composite_name.to_sym
+      when :instant then 24.hours.ago
+      when :hour then 60.days.ago
+      when :day then 4.years.ago
+      end
+    end
+
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def data_row(reading)
       probeid = "HIVE_#{reading.hive_id}"
       [
         probeid,
-        reading.created_at.utc,
-        reading.bot_uptime,
+        reading.sampled_at.utc,
+        reading.bot_uptime.to_f / 1440,
         fahrenheit(reading.bot_temp.to_f / 10),
         reading.bot_humidity.to_f / 10,
         fahrenheit(reading.brood_temp.to_f / 10),
