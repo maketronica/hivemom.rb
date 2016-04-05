@@ -1,10 +1,12 @@
 module HiveMom
   describe ReadingCompositor do
-    let(:s3_object) { double('S3 object', upload_file: true) }
+    let(:s3_object) { double('S3 object', put: true) }
     let(:s3_bucket) { double('S3 bucket', object: s3_object) }
     let(:s3_client) { double('S3 client', bucket: s3_bucket) }
     let(:s3_resourcer) { double('Aws::S3::Resource', new: s3_client) }
-    let(:compositor) { ReadingCompositor.new(s3_resourcer) }
+    let(:csv_compilation) { double('csv_compilation', content: 'csv content') }
+    let(:csv_compiler) { double('CsvCompilation', new: csv_compilation) }
+    let(:compositor) { ReadingCompositor.new(s3_resourcer, csv_compiler) }
 
     it 'instantiates' do
       expect(compositor).to be_a(ReadingCompositor)
@@ -12,7 +14,6 @@ module HiveMom
 
     context '#run' do
       let(:data_file_pointer) { double('File.open pointer', close: true) }
-      let(:data_file_generator) { double('DataFileGenerator', call: true) }
 
       before do
         allow(compositor).to receive(:loop).and_yield
@@ -20,9 +21,9 @@ module HiveMom
         allow(File)
           .to receive(:open)
           .and_return(data_file_pointer)
-        allow(DataFileGenerator)
-          .to receive(:new)
-          .and_return(data_file_generator)
+        allow(data_file_pointer)
+          .to receive(:write)
+          .with(csv_compilation.content)
       end
 
       context 'when there are no hourly composites' do
@@ -136,12 +137,21 @@ module HiveMom
       end
 
       it 'generates the csv file' do
-        expect(data_file_generator).to receive(:call)
+        expect(data_file_pointer)
+          .to receive(:write)
+          .with(csv_compilation.content)
         compositor.run
       end
 
       it 'closes the file pointer' do
         expect(data_file_pointer).to receive(:close)
+        compositor.run
+      end
+
+      it 'uploads csv data' do
+        expect(s3_object)
+          .to receive(:put)
+          .with(csv_compilation.content)
         compositor.run
       end
     end

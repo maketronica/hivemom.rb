@@ -1,19 +1,12 @@
 module HiveMom
-  class DataFileGenerator
-    attr_reader :file, :composite_name
+  class CsvCompilation
+    attr_reader :composite_name
 
-    def initialize(file_pointer, composite_name)
-      @file = file_pointer
+    def initialize(composite_name)
       @composite_name = composite_name
     end
 
-    def call
-      file.write(data)
-    end
-
-    private
-
-    def data
+    def content
       CSV.generate do |csv|
         csv << %w(probeid timestamp bot_uptime bot_temp bot_humidity brood_temp
                   brood_humidity hive_lbs)
@@ -22,6 +15,8 @@ module HiveMom
         end
       end
     end
+
+    private
 
     def readings
       @readings ||=

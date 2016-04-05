@@ -1,10 +1,12 @@
 # rubocop:disable Style/ClassLength
 module HiveMom
   class ReadingCompositor
-    attr_reader :s3_resourcer
+    attr_reader :s3_resourcer, :csv_compiler
 
-    def initialize(s3_resourcer = Aws::S3::Resource)
+    def initialize(s3_resourcer = Aws::S3::Resource,
+                   csv_compiler = CsvCompilation)
       @s3_resourcer = s3_resourcer
+      @csv_compiler = csv_compiler
     end
 
     def run
@@ -42,7 +44,7 @@ module HiveMom
 
     def generate_data_file(composite)
       file_pointer = File.open("#{csv_folder}/#{filename_for(composite)}", 'w')
-      DataFileGenerator.new(file_pointer, composite).call
+      file_pointer.write(csv_compilation(composite).content)
     ensure
       file_pointer.try(:close)
     end
@@ -51,7 +53,7 @@ module HiveMom
       s3 = s3_resourcer.new(region: HiveMom.config.aws_region)
       obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
               .object(filename_for(composite))
-      obj.upload_file("#{csv_folder}/#{filename_for(composite)}")
+      obj.put(csv_compilation(composite).content)
     rescue Errno::ECONNRESET => e
       HiveMom.logger.info(self.class) do
         "Rescuing from connection reset on uplodad: #{filename_for(composite)}"\
@@ -65,6 +67,11 @@ module HiveMom
 
     def filename_for(composite)
       "#{composite}_data.csv"
+    end
+
+    def csv_compilation(composite)
+      csvs ||= {}
+      csvs[composite] ||= csv_compiler.new(composite)
     end
 
     # rubocop:disable Style/MethodLength
