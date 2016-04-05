@@ -33,27 +33,28 @@ module HiveMom
     end
 
     def generate_and_upload_data_files
-      %w(instant hour day).each do |composite|
+      %w(instant hour day).each do |composite_name|
         HiveMom.logger.info(self.class) do
-          "Generating Data File: #{filename_for(composite)}"
+          "Generating Data File: #{filename_for(composite_name)}"
         end
-        generate_data_file(composite)
-        upload_data_file(composite)
+        generate_data_file(composite_name)
+        upload_data_file(composite_name)
       end
     end
 
-    def generate_data_file(composite)
-      file_pointer = File.open("#{csv_folder}/#{filename_for(composite)}", 'w')
-      file_pointer.write(csv_compilation(composite).content)
+    def generate_data_file(composite_name)
+      file_pointer =
+        File.open("#{csv_folder}/#{filename_for(composite_name)}", 'w')
+      file_pointer.write(csv_compilation(composite_name).content)
     ensure
       file_pointer.try(:close)
     end
 
-    def upload_data_file(composite)
+    def upload_data_file(composite_name)
       s3 = s3_resourcer.new(region: HiveMom.config.aws_region)
       obj = s3.bucket("hivemom-datafiles-#{HiveMom.config.env}")
-              .object(filename_for(composite))
-      obj.put(csv_compilation(composite).content)
+              .object(filename_for(composite_name))
+      obj.put(csv_compilation(composite_name).content)
     rescue Errno::ECONNRESET => e
       HiveMom.logger.info(self.class) do
         "Rescuing from connection reset on uplodad: #{filename_for(composite)}"\
@@ -65,13 +66,13 @@ module HiveMom
       HiveMom.config.csv_folder
     end
 
-    def filename_for(composite)
-      "#{composite}_data.csv"
+    def filename_for(composite_name)
+      "#{composite_name}_data.csv"
     end
 
-    def csv_compilation(composite)
+    def csv_compilation(composite_name)
       csvs ||= {}
-      csvs[composite] ||= csv_compiler.new(composite)
+      csvs[composite_name] ||= csv_compiler.new(composite_name)
     end
 
     # rubocop:disable Style/MethodLength
