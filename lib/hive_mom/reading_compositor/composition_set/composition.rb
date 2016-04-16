@@ -23,7 +23,8 @@ module HiveMom
 
         def composite_params_for_update
           composited_columns.map do |column_name|
-            [column_name, readings.average(column_name).to_i]
+            sane_readings = readings.where.not(column_name => 0)
+            [column_name, sane_readings.average(column_name).to_i]
           end.to_h
         end
 
