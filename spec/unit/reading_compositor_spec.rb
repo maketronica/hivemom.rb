@@ -151,7 +151,7 @@ module HiveMom
       it 'uploads csv data' do
         expect(s3_object)
           .to receive(:put)
-          .with(csv_compilation.content)
+          .with(body: csv_compilation.content)
         compositor.run
       end
     end

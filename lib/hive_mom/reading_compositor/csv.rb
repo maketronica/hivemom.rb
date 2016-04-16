@@ -16,7 +16,7 @@ module HiveMom
       end
 
       def upload
-        s3_object.put(csv_compilation.content)
+        s3_object.put(body: csv_compilation.content)
       rescue Errno::ECONNRESET
         HiveMom.logger.info(self.class) do
           "Rescuing from connection reset on uplodad: #{filename}"\
