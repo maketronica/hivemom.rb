@@ -33,7 +33,7 @@ module HiveMom
     end
 
     def csvs
-      @csvs ||= %w(instant hour day).map do |name|
+      %w(instant hour day).map do |name|
         Csv.new(name, self)
       end
     end
