@@ -7,7 +7,7 @@ module HiveMom
     end
 
     def content
-      CSV.generate do |csv|
+      @content ||= CSV.generate do |csv|
         csv << %w(probeid timestamp bot_uptime bot_temp bot_humidity brood_temp
                   brood_humidity hive_lbs)
         readings.each do |r|
