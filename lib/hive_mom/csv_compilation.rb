@@ -14,6 +14,8 @@ module HiveMom
           csv << data_row(r)
         end
       end
+    rescue ActiveRecord::StatementInvalid => e
+      process_rescued_error(e)
     end
 
     private
@@ -47,6 +49,16 @@ module HiveMom
       ]
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+    def process_rescued_error(e)
+      raise e unless e.message =~ /SQLite3::BusyException/
+      HiveMom.logger.error(self.class) do
+        "Compositor Rescuing from #{e.class} : #{e.message}\n"\
+        "Compositor Waiting for #{rescue_wait_time} seconds."
+      end
+      sleep rescue_wait_time
+      increment_previous_attempt_count
+    end
 
     def fahrenheit(c)
       (c * (9.0 / 5.0)) + 32
