@@ -1,11 +1,11 @@
 module HiveMom
   class ReadingCompositor
-    attr_reader :s3_resourcer, :csv_compiler
+    attr_reader :csv_writer, :s3_resourcer
 
     def initialize(s3_resourcer = Aws::S3::Resource,
-                   csv_compiler = CsvCompilation)
+                   csv_writer = Csv)
       @s3_resourcer = s3_resourcer
-      @csv_compiler = csv_compiler
+      @csv_writer = csv_writer
     end
 
     def run
@@ -34,7 +34,7 @@ module HiveMom
 
     def csvs
       %w(instant hour day).map do |name|
-        Csv.new(name, self)
+        csv_writer.new(name, self)
       end
     end
 

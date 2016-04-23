@@ -1,11 +1,12 @@
 module HiveMom
   class ReadingCompositor
     class Csv
-      attr_reader :compositor, :name
+      attr_reader :compositor, :csv_compiler, :name
 
-      def initialize(name, compositor)
+      def initialize(name, compositor, csv_compiler = CsvCompilation)
         @name = name
         @compositor = compositor
+        @csv_compiler = csv_compiler
       end
 
       def write_to_file
@@ -39,7 +40,7 @@ module HiveMom
       end
 
       def csv_compilation
-        @compiliation ||= compositor.csv_compiler.new(name)
+        @compiliation ||= csv_compiler.new(name)
       end
     end
   end
