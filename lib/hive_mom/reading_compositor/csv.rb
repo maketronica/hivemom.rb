@@ -1,16 +1,20 @@
 module HiveMom
   class ReadingCompositor
     class Csv
-      attr_reader :compositor, :csv_compiler, :name
+      attr_reader :compositor, :csv_compiler, :name, :file_constructor
 
-      def initialize(name, compositor, csv_compiler = CsvCompilation)
+      def initialize(name,
+                     compositor,
+                     csv_compiler = CsvCompilation,
+                     file_constructor = File)
         @name = name
         @compositor = compositor
         @csv_compiler = csv_compiler
+        @file_constructor = file_constructor
       end
 
       def write_to_file
-        file_pointer = File.open("#{csv_folder}/#{filename}", 'w')
+        file_pointer = file_constructor.open("#{csv_folder}/#{filename}", 'w')
         file_pointer.write(csv_compilation.content)
       ensure
         file_pointer.try(:close)
