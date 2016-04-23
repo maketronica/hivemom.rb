@@ -2,19 +2,25 @@ module HiveMom
   class ReadingCompositor
     class CompositionSet
       RESCUE_WAIT_BASE_TIME = 2
-      attr_reader :name, :compositor, :previous_attempt_count
+      attr_reader :name, :compositor, :previous_attempt_count,
+                  :reading_constructor, :composition_constructor
 
-      def initialize(name, compositor)
+      def initialize(name,
+                     compositor,
+                     reading_constructor = Reading,
+                     composition_constructor = Composition)
         @name = name
         @compositor = compositor
+        @reading_constructor = reading_constructor
+        @composition_constructor = composition_constructor
         @previous_attempt_count = 0
       end
 
       def update
         return if name.to_sym == :instant
-        Reading.pluck(:hive_id).uniq.each do |hive_id|
+        reading_constructor.pluck(:hive_id).uniq.each do |hive_id|
           begin
-            Composition.new(hive_id, self).update
+            composition_constructor.new(hive_id, self).update
           rescue ActiveRecord::StatementInvalid => e
             process_rescued_error(e)
           end
