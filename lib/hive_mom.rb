@@ -11,6 +11,11 @@ module HiveMom
     @root ||= File.expand_path('../../', __FILE__)
   end
 
+  def self.s3_bucket
+    @bucket ||=
+      s3_resource.bucket("hivemom-datafiles-#{config.env}")
+  end
+
   private_class_method
 
   def self.default_logger
@@ -25,5 +30,9 @@ module HiveMom
 
   def self.default_log_file_path
     File.expand_path("#{root}/log/#{config.env}.log", __FILE__)
+  end
+
+  def self.s3_resource
+    Aws::S3::Resource.new(region: config.aws_region)
   end
 end

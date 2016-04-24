@@ -1,19 +1,16 @@
 module HiveMom
   class ReadingCompositor
     class Csv
-      attr_reader :compositor, :csv_compiler, :name, :file_constructor,
-                  :s3_resourcer
+      attr_reader :compositor, :csv_compiler, :name, :file_constructor
 
       def initialize(name,
                      compositor,
                      csv_compiler = CsvCompilation,
-                     file_constructor = File,
-                     s3_resourcer = Aws::S3::Resource)
+                     file_constructor = File)
         @name = name
         @compositor = compositor
         @csv_compiler = csv_compiler
         @file_constructor = file_constructor
-        @s3_resourcer = s3_resourcer
       end
 
       def write_to_file
@@ -35,7 +32,7 @@ module HiveMom
       private
 
       def s3_object
-        @s3_object ||= s3_bucket.object(filename)
+        @s3_object ||= HiveMom.s3_bucket.object(filename)
       end
 
       def csv_folder
@@ -48,15 +45,6 @@ module HiveMom
 
       def csv_compilation
         @compiliation ||= csv_compiler.new(name)
-      end
-
-      def s3_bucket
-        @bucket ||=
-          s3_resource.bucket("hivemom-datafiles-#{HiveMom.config.env}")
-      end
-
-      def s3_resource
-        @s3_resource ||= s3_resourcer.new(region: HiveMom.config.aws_region)
       end
     end
   end

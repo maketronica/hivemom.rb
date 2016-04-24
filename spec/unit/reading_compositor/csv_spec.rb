@@ -9,11 +9,13 @@ module HiveMom
       let(:csv_compiler) { double('CsvCompilation', new: csv_compilation) }
       let(:s3_object) { double('S3 object', put: true) }
       let(:s3_bucket) { double('S3 bucket', object: s3_object) }
-      let(:s3_client) { double('S3 client', bucket: s3_bucket) }
-      let(:s3_resourcer) { double('Aws::S3::Resource', new: s3_client) }
       let(:compositor) { double('compositor') }
       let(:csv) do
-        Csv.new(name, compositor, csv_compiler, file_constructor, s3_resourcer)
+        Csv.new(name, compositor, csv_compiler, file_constructor)
+      end
+
+      before do
+        allow(HiveMom).to receive(:s3_bucket).and_return(s3_bucket)
       end
 
       describe '#upload' do
