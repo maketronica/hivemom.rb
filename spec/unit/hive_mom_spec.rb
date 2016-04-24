@@ -10,10 +10,12 @@ describe HiveMom do
   end
 
   describe '.s3_bucket' do
+    let(:env) { 'fooenv' }
     let(:region) { 'someregion' }
     let(:resource) { double('resource') }
 
     before do
+      HiveMom.config.env = env
       HiveMom.config.aws_region = region
       allow(Aws::S3::Resource)
         .to receive(:new)
@@ -22,7 +24,7 @@ describe HiveMom do
     end
 
     it 'gets a bucket' do
-      expect(resource).to receive(:bucket).with('hivemom-datafiles-test')
+      expect(resource).to receive(:bucket).with("hivemom-datafiles-#{env}")
       HiveMom.s3_bucket
     end
   end

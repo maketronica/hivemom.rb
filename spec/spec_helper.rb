@@ -31,7 +31,6 @@ include FixtureHelpers
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.before(:suite) do
-    HiveMom.config.csv_folder = 'test/path'
     HiveMom.logger.level = Logger::DEBUG
     db_config =
       YAML.load_file('config/database.yml')[ENV['HIVEMOM_ENV'] || 'development']
@@ -49,6 +48,8 @@ RSpec.configure do |config|
 
   config.around(:each) do |test|
     ActiveRecord::Base.transaction do
+      HiveMom.instance_variable_set('@config', nil)
+      HiveMom.instance_variable_set('@bucket', nil)
       HiveMom.logger.info('Running Test') { test.full_description }
       test.run
       raise ActiveRecord::Rollback
@@ -100,7 +101,7 @@ RSpec.configure do |config|
 
   # This setting enables warnings. It's recommended, but in some cases may
   # be too noisy due to issues in dependencies.
-  config.warnings = true
+  config.warnings = false
 
   # Many RSpec users commonly either run the entire suite or an individual
   # file, and it's useful to allow more verbose output when running an
