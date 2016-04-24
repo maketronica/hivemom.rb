@@ -1,13 +1,9 @@
 module HiveMom
   describe ReadingCompositor do
-    let(:s3_object) { double('S3 object', put: true) }
-    let(:s3_bucket) { double('S3 bucket', object: s3_object) }
-    let(:s3_client) { double('S3 client', bucket: s3_bucket) }
-    let(:s3_resourcer) { double('Aws::S3::Resource', new: s3_client) }
     let(:csv_writer) { double('csv_writer', write_to_file: true, upload: true) }
     let(:csv_writer_constructor) { double('Csv', new: csv_writer) }
     let(:compositor) do
-      ReadingCompositor.new(s3_resourcer, csv_writer_constructor)
+      ReadingCompositor.new(csv_writer_constructor)
     end
 
     it 'instantiates' do

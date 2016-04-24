@@ -38,7 +38,7 @@ yesterday_composite:
   brood_humidity: 5
   composite: 'day'
 
-two_Days_ago_composite:
+two_days_ago_composite:
   created_at: <%= 2.days.ago %>
   sampled_at: <%= 2.days.ago.beginning_of_day %>
   updated_at: <%= 2.days.ago %>

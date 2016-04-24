@@ -2,9 +2,7 @@ module HiveMom
   class ReadingCompositor
     attr_reader :csv_writer, :s3_resourcer
 
-    def initialize(s3_resourcer = Aws::S3::Resource,
-                   csv_writer = Csv)
-      @s3_resourcer = s3_resourcer
+    def initialize(csv_writer = Csv)
       @csv_writer = csv_writer
     end
 
@@ -20,10 +18,6 @@ module HiveMom
       end
     end
 
-    def s3_bucket
-      @bucket ||= s3_resource.bucket("hivemom-datafiles-#{HiveMom.config.env}")
-    end
-
     private
 
     def composition_sets
@@ -36,10 +30,6 @@ module HiveMom
       %w(instant hour day).map do |name|
         csv_writer.new(name, self)
       end
-    end
-
-    def s3_resource
-      @s3_resource ||= s3_resourcer.new(region: HiveMom.config.aws_region)
     end
   end
 end
