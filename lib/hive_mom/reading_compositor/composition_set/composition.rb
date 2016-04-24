@@ -11,6 +11,7 @@ module HiveMom
         end
 
         def update
+          return unless first_reading
           current_composite.update!(composite_params_for_update)
           initialize_next_composite
         end

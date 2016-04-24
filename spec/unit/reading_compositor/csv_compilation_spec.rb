@@ -1,7 +1,7 @@
 module HiveMom
   class ReadingCompositor
     describe CsvCompilation do
-      let(:composite_name) { :instant }
+      let(:composite_name) { :day }
       let(:compilation) { CsvCompilation.new(composite_name) }
 
       it 'instantiates' do
@@ -15,8 +15,8 @@ module HiveMom
         end
 
         it 'has readings' do
-          reading = readings(:recent_1)
-          matcher = "HIVE_#{reading.hive_id},#{reading.created_at.utc}"
+          reading = readings(:yesterday_composite)
+          matcher = "HIVE_#{reading.hive_id},#{reading.sampled_at.utc}"
           expect(compilation.content).to match(/#{matcher}/)
         end
       end

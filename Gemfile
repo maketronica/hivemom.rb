@@ -20,3 +20,8 @@ group :test do
   gem 'simplecov', require: false
   gem 'timecop'
 end
+
+group :development, :test do
+  gem 'pry'
+  gem 'pry-byebug'
+end

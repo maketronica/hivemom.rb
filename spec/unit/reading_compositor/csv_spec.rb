@@ -7,10 +7,14 @@ module HiveMom
       let(:file_constructor) { double('File', open: file_pointer) }
       let(:csv_compilation) { double('csv_compilation', content: content) }
       let(:csv_compiler) { double('CsvCompilation', new: csv_compilation) }
-      let(:s3_object) { double('s3_object', put: true) }
-      let(:s3_bucket) { double('s3_bucket', object: s3_object) }
-      let(:compositor) { double('compositor', s3_bucket: s3_bucket) }
-      let(:csv) { Csv.new(name, compositor, csv_compiler, file_constructor) }
+      let(:s3_object) { double('S3 object', put: true) }
+      let(:s3_bucket) { double('S3 bucket', object: s3_object) }
+      let(:s3_client) { double('S3 client', bucket: s3_bucket) }
+      let(:s3_resourcer) { double('Aws::S3::Resource', new: s3_client) }
+      let(:compositor) { double('compositor') }
+      let(:csv) do
+        Csv.new(name, compositor, csv_compiler, file_constructor, s3_resourcer)
+      end
 
       describe '#upload' do
         it 'puts content to s3 object' do
