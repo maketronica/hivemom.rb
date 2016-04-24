@@ -21,13 +21,13 @@ module HiveMom
     private
 
     def composition_sets
-      @composition_sets ||= %w(instant hour day).map do |name|
+      @composition_sets ||= Reading::COMPOSITES.map do |name|
         CompositionSet.new(name, self)
       end
     end
 
     def csvs
-      %w(instant hour day).map do |name|
+      Reading::COMPOSITES.map do |name|
         csv_writer.new(name, self)
       end
     end

@@ -3,7 +3,7 @@ module HiveMom
     class CompositionSet
       describe Composition do
         let(:hive_id) { 2 }
-        let(:name) { 'day' }
+        let(:name) { '1_day' }
         let(:composition_set) { double('composition_set', name: name) }
         let(:composition) { Composition.new(hive_id, composition_set) }
 

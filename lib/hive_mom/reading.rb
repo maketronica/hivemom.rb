@@ -1,6 +1,6 @@
 module HiveMom
   class Reading < ActiveRecord::Base
-    COMPOSITES = %w(instant hour day).freeze
+    COMPOSITES = %w(instant 1_hour 1_day).freeze
     UNCOMPOSITED_COLUMNS = %w(id hive_id bot_id sampled_at created_at
                               updated_at composite).freeze
     validates :hive_id, presence: true

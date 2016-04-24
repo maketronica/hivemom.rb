@@ -36,7 +36,7 @@ yesterday_composite:
   brood_temp: 2
   bot_humidity: 5
   brood_humidity: 5
-  composite: 'day'
+  composite: '1_day'
 
 two_days_ago_composite:
   created_at: <%= 2.days.ago %>
@@ -48,4 +48,4 @@ two_days_ago_composite:
   brood_temp: 2
   bot_humidity: 5
   brood_humidity: 5
-  composite: 'day'
+  composite: '1_day'

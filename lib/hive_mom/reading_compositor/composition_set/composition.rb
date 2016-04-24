@@ -52,7 +52,7 @@ module HiveMom
         def initialize_next_composite
           return unless next_reading
           Reading.for_hive(hive_id).composite(name).create(
-            sampled_at: next_reading.sampled_at.send("beginning_of_#{name}")
+            sampled_at: start_of_segment(next_reading.sampled_at)
           )
         end
 
@@ -62,7 +62,7 @@ module HiveMom
 
         def initialize_first_composite
           Reading.for_hive(hive_id).composite(name).create(
-            sampled_at: first_reading.sampled_at.send("beginning_of_#{name}")
+            sampled_at: start_of_segment(first_reading.sampled_at)
           )
         end
 
@@ -79,8 +79,24 @@ module HiveMom
                    ).first
         end
 
+        def start_of_segment(datetime)
+          Time.at((datetime.to_i / time_span) * time_span)
+        end
+
         def time_span
-          1.send(name)
+          @time_span ||= num_of_span_units.to_f.send(span_unit_name)
+        end
+
+        def num_of_span_units
+          decompiled_name[1]
+        end
+
+        def span_unit_name
+          decompiled_name[2]
+        end
+
+        def decompiled_name
+          @decompiled_name ||= /^([[:digit:]\.]+)_([[:alpha:]]+)$/.match(name)
         end
       end
     end

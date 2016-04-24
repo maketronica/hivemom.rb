@@ -1,7 +1,7 @@
 module HiveMom
   class ReadingCompositor
     describe CsvCompilation do
-      let(:composite_name) { :day }
+      let(:composite_name) { '1_day' }
       let(:compilation) { CsvCompilation.new(composite_name) }
 
       it 'instantiates' do

@@ -1,6 +1,8 @@
 module HiveMom
   class ReadingCompositor
     class CsvCompilation
+      MAX_RECORDS_PER_FILE = 60
+
       attr_reader :composite_name
 
       def initialize(composite_name)
@@ -28,10 +30,9 @@ module HiveMom
       end
 
       def max_composite_readings_age
-        case composite_name.to_sym
-        when :instant then 24.hours.ago
-        when :hour then 60.days.ago
-        when :day then 4.years.ago
+        case composite_name
+        when 'instant' then MAX_RECORDS_PER_FILE.minutes
+        else time_span * MAX_RECORDS_PER_FILE
         end
       end
 
@@ -63,6 +64,24 @@ module HiveMom
 
       def fahrenheit(c)
         (c * (9.0 / 5.0)) + 32
+      end
+
+      def time_span
+        @time_span ||= num_of_span_units.to_f.send(span_unit_name)
+      end
+
+      def num_of_span_units
+        puts "cn: #{composite_name}"
+        decompiled_name[1]
+      end
+
+      def span_unit_name
+        decompiled_name[2]
+      end
+
+      def decompiled_name
+        @decompiled_name ||=
+          /^([[:digit:]\.]+)_([[:alpha:]]+)$/.match(composite_name)
       end
     end
   end

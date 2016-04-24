@@ -5,18 +5,14 @@ module HiveMom
     let(:csv_folder) { config.csv_folder }
     let(:compositor) { ReadingCompositor.new }
     let(:file_pointers) do
-      {
-        instant: double('instant_file_pointer', write: true),
-        hour: double('hour_file_pointer', write: true),
-        day: double('day_file_pointer', write: true)
-      }
+      Reading::COMPOSITES.map do |name|
+        [name, double("#{name}_file_pointer", write: true)]
+      end.to_h
     end
     let(:s3_objects) do
-      {
-        instant: double('instant_s3_object', put: true),
-        hour: double('hour_s3_object', put: true),
-        day: double('day_s3_object', put: true)
-      }
+      Reading::COMPOSITES.map do |name|
+        [name, double("#{name}_s3_object", put: true)]
+      end.to_h
     end
     let(:s3_bucket) { double(:s3_bucket) }
     let(:s3_resource) { double('s3_resource', bucket: s3_bucket) }
@@ -30,15 +26,15 @@ module HiveMom
         allow(File).to receive(:open).and_call_original
         allow(compositor).to receive(:loop).and_yield
         allow(compositor).to receive(:sleep)
-        %w(instant hour day).each do |span|
+        Reading::COMPOSITES.each do |span|
           allow(File)
             .to receive(:open)
             .with("#{csv_folder}/#{span}_data.csv", 'w')
-            .and_return(file_pointers[span.to_sym])
+            .and_return(file_pointers[span])
           allow(s3_bucket)
             .to receive(:object)
             .with("#{span}_data.csv")
-            .and_return(s3_objects[span.to_sym])
+            .and_return(s3_objects[span])
         end
         Reading.instant.for_hive(hive_id).create(
           sampled_at: Time.now,
@@ -49,41 +45,29 @@ module HiveMom
         )
       end
 
-      it 'creates composite hour readings' do
-        expect { compositor.run }.to change { Reading.composite(:hour).count }
+      Reading::COMPOSITES.each do |name|
+        next if name == 'instant'
+        it "creates #{name} composite readings" do
+          expect { compositor.run }
+            .to change { Reading.composite(name).count },
+                lambda {
+                  "Expected #{name} compositions to change, but is still "\
+                  "#{Reading.composite(name).count}"
+                }
+        end
       end
 
-      it 'creates composite day readings' do
-        expect { compositor.run }.to change { Reading.composite(:day).count }
-      end
-
-      it 'writes composite instant csv file' do
-        expect(file_pointers[:instant]).to receive(:write).with(/HIVE_2/)
+      it 'writes composite csv files' do
+        Reading::COMPOSITES.each do |name|
+          expect(file_pointers[name]).to receive(:write).with(/HIVE_2/)
+        end
         compositor.run
       end
 
-      it 'writes composite hour csv file' do
-        expect(file_pointers[:hour]).to receive(:write).with(/HIVE_2/)
-        compositor.run
-      end
-
-      it 'writes composite day csv file' do
-        expect(file_pointers[:day]).to receive(:write).with(/HIVE_2/)
-        compositor.run
-      end
-
-      it 'uploads instant csv file to s3' do
-        expect(s3_objects[:instant]).to receive(:put).with(body: /HIVE_2/)
-        compositor.run
-      end
-
-      it 'uploads hour csv file to s3' do
-        expect(s3_objects[:hour]).to receive(:put).with(body: /HIVE_2/)
-        compositor.run
-      end
-
-      it 'uploads day csv file to s3' do
-        expect(s3_objects[:day]).to receive(:put).with(body: /HIVE_2/)
+      it 'uploads csv files to s3' do
+        Reading::COMPOSITES.each do |name|
+          expect(s3_objects[name]).to receive(:put).with(body: /HIVE_2/)
+        end
         compositor.run
       end
     end
