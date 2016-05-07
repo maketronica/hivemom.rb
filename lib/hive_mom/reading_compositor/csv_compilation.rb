@@ -2,6 +2,7 @@ module HiveMom
   class ReadingCompositor
     class CsvCompilation
       MAX_RECORDS_PER_FILE = 60
+      RESCUE_WAIT_BASE_TIME = 2
 
       attr_reader :composite_name
 
@@ -82,6 +83,14 @@ module HiveMom
       def decompiled_name
         @decompiled_name ||=
           /^([[:digit:]\.]+)_([[:alpha:]]+)$/.match(composite_name)
+      end
+
+      def rescue_wait_time
+        RESCUE_WAIT_BASE_TIME**previous_attempt_count
+      end
+
+      def increment_previous_attempt_count
+        @previous_attempt_count += 1
       end
     end
   end
