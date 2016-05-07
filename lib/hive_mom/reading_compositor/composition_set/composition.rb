@@ -42,7 +42,7 @@ module HiveMom
         end
 
         def end_time
-          start_time + time_span
+          start_time + time_span.length
         end
 
         def start_time
@@ -75,28 +75,17 @@ module HiveMom
             Reading.instant
                    .order(:sampled_at)
                    .where(
-                     ['sampled_at > ?', last_composite.sampled_at + time_span]
+                     ['sampled_at > ?',
+                      last_composite.sampled_at + time_span.length]
                    ).first
         end
 
         def start_of_segment(datetime)
-          Time.at((datetime.to_i / time_span) * time_span)
+          time_span.start_for(datetime)
         end
 
         def time_span
-          @time_span ||= num_of_span_units.to_f.send(span_unit_name)
-        end
-
-        def num_of_span_units
-          decompiled_name[1]
-        end
-
-        def span_unit_name
-          decompiled_name[2]
-        end
-
-        def decompiled_name
-          @decompiled_name ||= /^([[:digit:]\.]+)_([[:alpha:]]+)$/.match(name)
+          @time_span ||= TimeSpan.new(name)
         end
       end
     end
