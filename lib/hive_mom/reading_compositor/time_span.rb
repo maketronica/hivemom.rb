@@ -12,7 +12,7 @@ module HiveMom
       end
 
       def length
-        @length = num_of_span_units.to_f.send(span_unit_name)
+        @length ||= num_of_span_units.to_f.send(span_unit_name)
       end
 
       private

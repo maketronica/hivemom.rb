@@ -28,12 +28,13 @@ module HiveMom
         @readings ||=
           Reading.composite(composite_name)
                  .where(['sampled_at > ?', max_composite_readings_age])
+                 .where.not(bot_uptime: nil)
       end
 
       def max_composite_readings_age
         case composite_name
-        when 'instant' then MAX_RECORDS_PER_FILE.minutes
-        else time_span.length * MAX_RECORDS_PER_FILE
+        when 'instant' then MAX_RECORDS_PER_FILE.minutes.ago
+        else (time_span.length.to_i * MAX_RECORDS_PER_FILE).seconds.ago
         end
       end
 

@@ -12,6 +12,9 @@ module HiveMom
 
         def update
           return unless first_reading
+          HiveMom.logger.info(self.class) do 
+            "Updating composition #{set.name} for hive #{hive_id}"
+          end
           current_composite.update!(composite_params_for_update)
           initialize_next_composite
         end

@@ -14,7 +14,7 @@ module HiveMom
           csv.upload
         end
         HiveMom.logger.info(self.class) { 'Hybernating' }
-        sleep 900
+        sleep 600
       end
     end
 
