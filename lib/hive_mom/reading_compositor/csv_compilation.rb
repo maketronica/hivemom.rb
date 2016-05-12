@@ -29,7 +29,7 @@ module HiveMom
         @readings ||=
           Reading.composite(composite_name)
                  .where(['sampled_at > ?', max_composite_readings_age])
-                 .where.not(bot_uptime: nil)
+                 .where.not(bot_uptime: 0)
       end
 
       def max_composite_readings_age
