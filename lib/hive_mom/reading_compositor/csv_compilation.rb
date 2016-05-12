@@ -4,10 +4,11 @@ module HiveMom
       MAX_RECORDS_PER_FILE = 100
       RESCUE_WAIT_BASE_TIME = 2
 
-      attr_reader :composite_name
+      attr_reader :composite_name, :previous_attempt_count
 
       def initialize(composite_name)
         @composite_name = composite_name
+        @previous_attempt_count = 0
       end
 
       def content
