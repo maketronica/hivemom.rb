@@ -14,7 +14,8 @@ module HiveMom
       def content
         @content ||= CSV.generate do |csv|
           csv << %w(probeid timestamp bot_uptime bot_temp bot_humidity
-                    brood_temp brood_humidity hive_lbs)
+                    brood_temp brood_humidity ambient_temp ambient_humidity
+                    hive_lbs)
           readings.each do |r|
             csv << data_row(r)
           end
@@ -50,6 +51,8 @@ module HiveMom
           reading.bot_humidity.to_f / 10,
           fahrenheit(reading.brood_temp.to_f / 10),
           reading.brood_humidity.to_f / 10,
+          fahrenheit(reading.ambient_temp.to_f / 10),
+          reading.ambient_humidity.to_f / 10,
           reading.hive_lbs.to_f / 100
         ]
       end
