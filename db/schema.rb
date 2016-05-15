@@ -11,20 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160401212239558) do
+ActiveRecord::Schema.define(version: 20160515101121094) do
 
   create_table "readings", force: :cascade do |t|
-    t.integer  "hive_id"
-    t.integer  "bot_id"
-    t.integer  "bot_uptime"
-    t.integer  "bot_temp"
-    t.integer  "bot_humidity"
-    t.integer  "brood_temp"
-    t.integer  "brood_humidity"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.integer  "hive_lbs"
-    t.string   "composite"
+    t.integer "hive_id"
+    t.integer "bot_id"
+    t.integer "bot_uptime"
+    t.integer "bot_temp"
+    t.integer "bot_humidity"
+    t.integer "brood_temp"
+    t.integer "brood_humidity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "hive_lbs"
+    t.string "composite"
     t.datetime "sampled_at"
   end
 

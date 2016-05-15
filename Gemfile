@@ -24,4 +24,5 @@ end
 group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
+  gem 'activerecord_sane_schema_dumper'
 end

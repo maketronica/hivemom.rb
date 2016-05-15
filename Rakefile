@@ -2,6 +2,7 @@
 require_relative 'config/environment.rb'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
+require 'activerecord_sane_schema_dumper'
 
 task default: [:rubocop, :spec]
 
@@ -48,6 +49,8 @@ namespace :db do
   desc 'Dump Schema'
   namespace :schema do
     task dump: :configure_connection do
+      ActiveRecord::SchemaDumper.send(:include,
+                                      ActiveRecord::SaneSchemaDumper::Extension)
       File.open('db/schema.rb', 'w:utf-8') do |file|
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
       end
