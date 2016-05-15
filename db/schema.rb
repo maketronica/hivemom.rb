@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 20160515101121094) do
     t.integer "hive_lbs"
     t.string "composite"
     t.datetime "sampled_at"
+    t.integer "ambient_temp"
+    t.integer "ambient_humidity"
   end
 
   add_index "readings", ["sampled_at"], name: "index_readings_on_sampled_at"
