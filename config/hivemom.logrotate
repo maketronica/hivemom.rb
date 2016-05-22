@@ -1,0 +1,7 @@
+/var/hivemom/log/*.log {
+  compress
+  delaycompress
+  missingok
+  rotate 10
+  size 100M
+}

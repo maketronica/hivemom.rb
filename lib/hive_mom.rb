@@ -23,7 +23,7 @@ module HiveMom
   end
 
   def self.default_logger
-    @default_logger ||= Logger.new(default_log_file, 5, 1_024_000)
+    @default_logger ||= Logger.new(default_log_file)
   end
 
   def self.default_log_file
