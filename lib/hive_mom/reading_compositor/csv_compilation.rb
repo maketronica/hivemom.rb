@@ -8,7 +8,7 @@ module HiveMom
 
       def initialize(composite_name)
         @composite_name = composite_name
-        @previous_attempt_count = 0
+        reset_previous_attempt_count
       end
 
       def content
@@ -19,6 +19,7 @@ module HiveMom
           readings.each do |r|
             csv << data_row(r)
           end
+          reset_previous_attempt_count
         end
       rescue ActiveRecord::StatementInvalid => e
         process_rescued_error(e)
@@ -82,6 +83,10 @@ module HiveMom
 
       def increment_previous_attempt_count
         @previous_attempt_count += 1
+      end
+
+      def reset_previous_attempt_count
+        @previous_attempt_count = 0
       end
     end
   end
