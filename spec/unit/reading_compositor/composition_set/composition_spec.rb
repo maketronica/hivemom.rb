@@ -3,7 +3,7 @@ module HiveMom
     class CompositionSet
       describe Composition do
         let(:hive_id) { 2 }
-        let(:name) { '1_day' }
+        let(:name) { '15_minutes' }
         let(:composition_set) { double('composition_set', name: name) }
         let(:composition) { Composition.new(hive_id, composition_set) }
 
@@ -39,7 +39,9 @@ module HiveMom
           context 'when there is a current composite' do
             it 'updates the current composite' do
               expect { composition.update }
-                .to change { readings(:yesterday_composite).reload.bot_temp }
+                .to change {
+                  readings(:fifteen_minute_composite).reload.bot_temp
+                }
                 .from(2).to(20)
             end
           end

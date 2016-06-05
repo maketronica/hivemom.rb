@@ -38,6 +38,7 @@ module HiveMom
         end
         Reading.instant.for_hive(hive_id).create(
           sampled_at: Time.now,
+          bot_uptime: 1,
           bot_temp: 42,
           brood_temp: 42,
           bot_humidity: 42,

@@ -3,6 +3,7 @@ recent_<%= i %>:
   created_at: <%= i.minutes.ago - 1.day %>
   sampled_at: <%= i.minutes.ago - 1.day %>
   updated_at: <%= i.minutes.ago - 1.day %>
+  bot_uptime: 1
   bot_id: 1
   hive_id: 2
   bot_temp: 20
@@ -17,6 +18,7 @@ yesterday_<%= i %>:
   created_at: <%= i.minutes.ago - 2.days %>
   sampled_at: <%= i.minutes.ago - 2.days %>
   updated_at: <%= i.minutes.ago - 2.days %>
+  bot_uptime: 1
   bot_id: 1
   hive_id: 2
   bot_temp: 20
@@ -30,6 +32,7 @@ yesterday_composite:
   created_at: <%= 1.day.ago %>
   sampled_at: <%= 1.day.ago.beginning_of_day %>
   updated_at: <%= 1.day.ago %>
+  bot_uptime: 1
   bot_id: 1
   hive_id: 2
   bot_temp: 2
@@ -42,6 +45,7 @@ two_days_ago_composite:
   created_at: <%= 2.days.ago %>
   sampled_at: <%= 2.days.ago.beginning_of_day %>
   updated_at: <%= 2.days.ago %>
+  bot_uptime: 1
   bot_id: 1
   hive_id: 2
   bot_temp: 2
@@ -49,3 +53,29 @@ two_days_ago_composite:
   bot_humidity: 5
   brood_humidity: 5
   composite: '1_day'
+
+fifteen_minute_instant_source:
+  created_at: <%= 2.hours.ago %>
+  sampled_at: <%= 2.hours.ago.beginning_of_hour %>
+  updated_at: <%= 2.hours.ago %>
+  bot_uptime: 1
+  bot_id: 1
+  hive_id: 2
+  bot_temp: 20
+  brood_temp: 2
+  bot_humidity: 5
+  brood_humidity: 5
+  composite: 'instant'
+
+fifteen_minute_composite:
+  created_at: <%= 2.hours.ago %>
+  sampled_at: <%= 2.hours.ago.beginning_of_hour %>
+  updated_at: <%= 2.hours.ago %>
+  bot_uptime: 1
+  bot_id: 1
+  hive_id: 2
+  bot_temp: 2
+  brood_temp: 2
+  bot_humidity: 5
+  brood_humidity: 5
+  composite: '15_minutes'
