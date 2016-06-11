@@ -18,8 +18,8 @@ module HiveMom
 
       def update
         return if name.to_sym == :instant
-        reading_constructor.pluck(:hive_id).uniq.each do |hive_id|
           begin
+            reading_constructor.pluck(:hive_id).uniq.each do |hive_id|
             composition_constructor.new(hive_id, self).update
             reset_previous_attempt_count
           rescue ActiveRecord::StatementInvalid => e
